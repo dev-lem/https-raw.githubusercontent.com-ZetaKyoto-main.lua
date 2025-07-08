@@ -1,149 +1,22 @@
--- ZETA KYOTO v0.6 (FINAL NO-BS VERSION)
--- Loading screen + restored v0.4 combat + working ping check
+--[[
+  ZETA KYOTO GUI - v0.4 (REBRANDED)
+  - Fixed settings button position
+  - Transparent UI
+  - Working settings panel
+  - "Auto Block" script loader
+  - Removed size customization
+  - Optimized layout
+]]
 
---=== LOADING SCREEN ===--
+--=== SERVICES ===--
 local Players = game:GetService("Players")
-local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
-
-local LoadingGui = Instance.new("ScreenGui")
-LoadingGui.Name = "ZetaLoader"
-LoadingGui.IgnoreGuiInset = true
-
-local BlackBg = Instance.new("Frame")
-BlackBg.Size = UDim2.new(1, 0, 1, 0)
-BlackBg.BackgroundColor3 = Color3.new(0, 0, 0)
-BlackBg.BackgroundTransparency = 0.3
-BlackBg.ZIndex = 999
-BlackBg.Parent = LoadingGui
-
-local LoadText = Instance.new("TextLabel")
-LoadText.Text = "PLEASE WAIT 5 SECONDS"
-LoadText.Font = Enum.Font.SourceSansBold
-LoadText.TextSize = 24
-LoadText.TextColor3 = Color3.new(1, 1, 1)
-LoadText.Size = UDim2.new(1, 0, 1, 0)
-LoadText.BackgroundTransparency = 1
-LoadText.ZIndex = 1000
-LoadText.Parent = BlackBg
-
-LoadingGui.Parent = PlayerGui
-task.wait(5)
-LoadingGui:Destroy()
-
---=== MAIN UI ===--
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "ZetaKyoto_v6"
-ScreenGui.ResetOnSpawn = false
-
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 200, 0, 250)
-MainFrame.Position = UDim2.new(0.5, -100, 0.5, -125)
-MainFrame.BackgroundColor3 = Color3.fromHex("#181820")
-MainFrame.BackgroundTransparency = 0.4
-MainFrame.Active = true
-MainFrame.Draggable = true
-
--- Top Bar
-local TopBar = Instance.new("Frame")
-TopBar.Size = UDim2.new(1, 0, 0.12, 0)
-TopBar.Position = UDim2.new(0, 0, 0, 0)
-TopBar.BackgroundColor3 = Color3.fromHex("#4A1D96")
-TopBar.BackgroundTransparency = 0.4
-TopBar.Parent = MainFrame
-
-local Title = Instance.new("TextLabel")
-Title.Text = "ZETA KYOTO v0.6"
-Title.Font = Enum.Font.SourceSansBold
-Title.TextSize = 18
-Title.TextColor3 = Color3.new(1,1,1)
-Title.Size = UDim2.new(1, 0, 1, 0)
-Title.BackgroundTransparency = 1
-Title.Parent = TopBar
-
--- Main Buttons
-local PingButton = Instance.new("TextButton")
-PingButton.Text = "CHECK PING & START"
-PingButton.Font = Enum.Font.SourceSansBold
-PingButton.TextSize = 14
-PingButton.Size = UDim2.new(0.85, 0, 0.18, 0)
-PingButton.Position = UDim2.new(0.075, 0, 0.3, 0)
-PingButton.BackgroundColor3 = Color3.fromHex("#7E3AF2")
-PingButton.BackgroundTransparency = 0.4
-PingButton.TextColor3 = Color3.new(1,1,1)
-PingButton.Parent = MainFrame
-
-local KyotoButton = Instance.new("TextButton")
-KyotoButton.Text = "AUTO KYOTO"
-KyotoButton.Font = Enum.Font.SourceSansBold
-KyotoButton.TextSize = 16
-KyotoButton.Size = UDim2.new(0.85, 0, 0.18, 0)
-KyotoButton.Position = UDim2.new(0.075, 0, 0.55, 0)
-KyotoButton.BackgroundColor3 = Color3.fromHex("#7E3AF2")
-KyotoButton.BackgroundTransparency = 0.4
-KyotoButton.TextColor3 = Color3.new(1,1,1)
-KyotoButton.Visible = false
-KyotoButton.Parent = MainFrame
-
--- Settings Button
-local SettingsBtn = Instance.new("TextButton")
-SettingsBtn.Text = "⚙️"
-SettingsBtn.Size = UDim2.new(0, 30, 0, 30)
-SettingsBtn.Position = UDim2.new(1, -35, 0, 5)
-SettingsBtn.BackgroundColor3 = Color3.fromHex("#4A1D96")
-SettingsBtn.BackgroundTransparency = 0.4
-SettingsBtn.TextSize = 18
-SettingsBtn.TextColor3 = Color3.new(1,1,1)
-SettingsBtn.Parent = MainFrame
-
--- Settings Panel
-local SettingsPanel = Instance.new("Frame")
-SettingsPanel.Size = UDim2.new(0, 190, 0, 180)
-SettingsPanel.Position = UDim2.new(1, 5, 0, 40)
-SettingsPanel.BackgroundColor3 = Color3.fromHex("#181820")
-SettingsPanel.BackgroundTransparency = 0.25
-SettingsPanel.Visible = false
-SettingsPanel.Parent = MainFrame
-
--- Settings Content
-local OtherScriptsLabel = Instance.new("TextLabel")
-OtherScriptsLabel.Text = "OTHER SCRIPTS"
-OtherScriptsLabel.Font = Enum.Font.SourceSansBold
-OtherScriptsLabel.TextSize = 14
-OtherScriptsLabel.TextColor3 = Color3.new(1,1,1)
-OtherScriptsLabel.Size = UDim2.new(1, -20, 0, 25)
-OtherScriptsLabel.Position = UDim2.new(0, 15, 0, 15)
-OtherScriptsLabel.BackgroundTransparency = 1
-OtherScriptsLabel.Parent = SettingsPanel
-
-local AutoBlockBtn = Instance.new("TextButton")
-AutoBlockBtn.Text = "AUTO BLOCK"
-AutoBlockBtn.Font = Enum.Font.SourceSansBold
-AutoBlockBtn.TextSize = 12
-AutoBlockBtn.Size = UDim2.new(1, -30, 0, 30)
-AutoBlockBtn.Position = UDim2.new(0, 15, 0, 45)
-AutoBlockBtn.BackgroundColor3 = Color3.fromHex("#7E3AF2")
-AutoBlockBtn.BackgroundTransparency = 0.4
-AutoBlockBtn.TextColor3 = Color3.new(1,1,1)
-AutoBlockBtn.Parent = SettingsPanel
-
-local Signature = Instance.new("TextLabel")
-Signature.Text = "Made by K - Z"
-Signature.Font = Enum.Font.SourceSans
-Signature.TextSize = 10
-Signature.TextColor3 = Color3.fromHex("#AAAAAA")
-Signature.Size = UDim2.new(1, 0, 0, 20)
-Signature.Position = UDim2.new(0, 0, 0, 150)
-Signature.BackgroundTransparency = 1
-Signature.TextXAlignment = Enum.TextXAlignment.Center
-Signature.Parent = SettingsPanel
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
 
 --=== CORE FUNCTIONS ===--
-local function showNotif(text)
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "KYOTO", 
-        Text = text, 
-        Duration = 3
-    })
+local function teleportForward()
+    local root = Player.Character:WaitForChild("HumanoidRootPart")
+    root.CFrame = CFrame.new(root.Position + root.CFrame.LookVector * 18.42)
 end
 
 local function calculateWaitTime(ping)
@@ -156,9 +29,12 @@ local function calculateWaitTime(ping)
     else return base * 1.15 end
 end
 
-local function teleportForward()
-    local root = Player.Character:WaitForChild("HumanoidRootPart")
-    root.CFrame = CFrame.new(root.Position + root.CFrame.LookVector * 18.42)
+local function showNotif(text)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "KYOTO", 
+        Text = text, 
+        Duration = 3
+    })
 end
 
 local function pressKey1()
@@ -179,13 +55,122 @@ local function pressKey2()
     end
 end
 
+--=== OPTIMIZED UI ===--
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ZetaKyoto_v4"
+ScreenGui.ResetOnSpawn = false
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 200, 0, 250)
+MainFrame.Position = UDim2.new(0.5, -100, 0.5, -125)
+MainFrame.BackgroundColor3 = Color3.fromHex("#1E1E2D")
+MainFrame.BackgroundTransparency = 0.3  -- More transparent
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+-- Fixed Settings Button (Better Position)
+local SettingsBtn = Instance.new("TextButton")
+SettingsBtn.Text = "⚙️"
+SettingsBtn.Size = UDim2.new(0, 30, 0, 30)
+SettingsBtn.Position = UDim2.new(1, -35, 0, 5)
+SettingsBtn.BackgroundColor3 = Color3.fromHex("#4A1D96")
+SettingsBtn.BackgroundTransparency = 0.3  -- Transparent
+SettingsBtn.TextSize = 18
+SettingsBtn.TextColor3 = Color3.new(1,1,1)
+SettingsBtn.Parent = MainFrame
+
+-- Settings Panel (Rebranded)
+local SettingsPanel = Instance.new("Frame")
+SettingsPanel.Size = UDim2.new(0, 180, 0, 150)
+SettingsPanel.Position = UDim2.new(1, 5, 0, 40)
+SettingsPanel.BackgroundColor3 = Color3.fromHex("#1E1E2D")
+SettingsPanel.BackgroundTransparency = 0.2
+SettingsPanel.Visible = false
+SettingsPanel.Parent = MainFrame
+
+-- "Other Scripts" Section
+local OtherScriptsLabel = Instance.new("TextLabel")
+OtherScriptsLabel.Text = "OTHER SCRIPTS"
+OtherScriptsLabel.Font = Enum.Font.GothamBold
+OtherScriptsLabel.TextSize = 14
+OtherScriptsLabel.TextColor3 = Color3.new(1,1,1)
+OtherScriptsLabel.Size = UDim2.new(1, -10, 0, 25)
+OtherScriptsLabel.Position = UDim2.new(0, 10, 0, 10)
+OtherScriptsLabel.BackgroundTransparency = 1
+OtherScriptsLabel.Parent = SettingsPanel
+
+-- Auto Block Button
+local AutoBlockBtn = Instance.new("TextButton")
+AutoBlockBtn.Text = "AUTO BLOCK"
+AutoBlockBtn.Font = Enum.Font.GothamBold
+AutoBlockBtn.TextSize = 12
+AutoBlockBtn.Size = UDim2.new(1, -20, 0, 30)
+AutoBlockBtn.Position = UDim2.new(0, 10, 0, 40)
+AutoBlockBtn.BackgroundColor3 = Color3.fromHex("#7E3AF2")
+AutoBlockBtn.BackgroundTransparency = 0.3
+AutoBlockBtn.TextColor3 = Color3.new(1,1,1)
+AutoBlockBtn.Parent = SettingsPanel
+
+-- Credits Label
+local CreditsLabel = Instance.new("TextLabel")
+CreditsLabel.Text = "Credits to NotPaki for this auto block"
+CreditsLabel.Font = Enum.Font.Gotham
+CreditsLabel.TextSize = 10
+CreditsLabel.TextColor3 = Color3.new(1,1,1)
+CreditsLabel.Size = UDim2.new(1, -20, 0, 20)
+CreditsLabel.Position = UDim2.new(0, 10, 0, 75)
+CreditsLabel.BackgroundTransparency = 1
+CreditsLabel.Parent = SettingsPanel
+
+-- Main UI Elements
+local TopBar = Instance.new("Frame")
+TopBar.Size = UDim2.new(1, 0, 0.12, 0)
+TopBar.Position = UDim2.new(0, 0, 0, 0)
+TopBar.BackgroundColor3 = Color3.fromHex("#4A1D96")
+TopBar.BackgroundTransparency = 0.3  -- Transparent
+TopBar.Parent = MainFrame
+
+local Title = Instance.new("TextLabel")
+Title.Text = "ZETA KYOTO v0.4"
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 18
+Title.TextColor3 = Color3.new(1,1,1)
+Title.Size = UDim2.new(1, 0, 1, 0)
+Title.BackgroundTransparency = 1
+Title.Parent = TopBar
+
+-- Main Buttons
+local PingButton = Instance.new("TextButton")
+PingButton.Text = "CHECK PING & START"
+PingButton.Font = Enum.Font.GothamBold
+PingButton.TextSize = 14
+PingButton.Size = UDim2.new(0.85, 0, 0.18, 0)
+PingButton.Position = UDim2.new(0.075, 0, 0.3, 0)
+PingButton.BackgroundColor3 = Color3.fromHex("#7E3AF2")
+PingButton.BackgroundTransparency = 0.3
+PingButton.TextColor3 = Color3.new(1,1,1)
+PingButton.Parent = MainFrame
+
+local KyotoButton = Instance.new("TextButton")
+KyotoButton.Text = "AUTO KYOTO"
+KyotoButton.Font = Enum.Font.GothamBold
+KyotoButton.TextSize = 16
+KyotoButton.Size = UDim2.new(0.85, 0, 0.18, 0)
+KyotoButton.Position = UDim2.new(0.075, 0, 0.55, 0)
+KyotoButton.BackgroundColor3 = Color3.fromHex("#7E3AF2")
+KyotoButton.BackgroundTransparency = 0.3
+KyotoButton.TextColor3 = Color3.new(1,1,1)
+KyotoButton.Visible = false
+KyotoButton.Parent = MainFrame
+
 --=== FUNCTIONALITY ===--
 SettingsBtn.MouseButton1Click:Connect(function()
     SettingsPanel.Visible = not SettingsPanel.Visible
 end)
 
 AutoBlockBtn.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Cyborg883/TSB/main/CombatGui"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Cyborg883/TSB/refs/heads/main/CombatGui"))()
+    showNotif("Auto Block loaded!")
 end)
 
 local debounce = false
@@ -217,6 +202,7 @@ KyotoButton.MouseButton1Click:Connect(function()
     debounce = false
 end)
 
---=== FINALIZE ===--
+-- Finalize
 MainFrame.Parent = ScreenGui
 ScreenGui.Parent = PlayerGui
+showNotif("ZETA KYOTO v0.4 loaded")
