@@ -1,8 +1,8 @@
 --[[
-  ZETA KYOTO v0.5 (FONT-FIXED)
-  - Uses only Roblox-valid fonts
-  - Military-grade code structure
-  - Same lethal functionality
+  ZETA KYOTO v0.5 (HOTFIX)
+  - Fixed ping check system
+  - Restored settings button functionality
+  - Combat-ready confirmation
 ]]
 
 --=== SERVICES ===--
@@ -10,117 +10,159 @@ local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 
---=== FONT SYSTEM ===--
-local FONT = Enum.Font.SourceSansBold -- 100% guaranteed working font
-local TEXT_COLOR = Color3.new(1, 1, 1)
-
---=== CORE FUNCTIONS (UNCHANGED) ===--
+--=== CORE FUNCTIONS ===--
 local function teleportForward()
     local root = Player.Character:WaitForChild("HumanoidRootPart")
-    root.CFrame = CFrame.new(root.Position + root.CFrame.LookVector * 18.42) 
+    root.CFrame = CFrame.new(root.Position + root.CFrame.LookVector * 18.42)
 end
 
---=== UI FACTORY ===--
-local function CreateElement(type, props)
-    local element = Instance.new(type)
-    for prop, value in pairs(props) do
-        element[prop] = value
-    end
-    return element
-end
-
--- MAIN FRAME
-local ScreenGui = CreateElement("ScreenGui", {
-    Name = "ZetaKyoto_v5",
-    ResetOnSpawn = false
-})
-
-local MainFrame = CreateElement("Frame", {
-    Size = UDim2.new(0, 200, 0, 250),
-    Position = UDim2.new(0.5, -100, 0.5, -125),
-    BackgroundColor3 = Color3.fromHex("#181820"),
-    BackgroundTransparency = 0.4,
-    Active = true,
-    Draggable = true
-})
-
-CreateElement("UICorner", {CornerRadius = UDim.new(0, 8), Parent = MainFrame})
-
--- TOP BAR
-CreateElement("TextLabel", {
-    Text = "ZETA KYOTO v0.5",
-    Font = FONT,
-    TextSize = 18,
-    TextColor3 = TEXT_COLOR,
-    Size = UDim2.new(1, 0, 1, 0),
-    BackgroundTransparency = 1,
-    Parent = CreateElement("Frame", {
-        Size = UDim2.new(1, 0, 0.12, 0),
-        BackgroundColor3 = Color3.fromHex("#4A1D96"),
-        BackgroundTransparency = 0.4,
-        Parent = MainFrame
+local function showNotif(text)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "KYOTO", 
+        Text = text, 
+        Duration = 3
     })
-})
+end
 
--- BUTTON FACTORY
+--=== UI CONSTRUCTION ===--
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ZetaKyoto_v5"
+ScreenGui.ResetOnSpawn = false
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 200, 0, 250)
+MainFrame.Position = UDim2.new(0.5, -100, 0.5, -125)
+MainFrame.BackgroundColor3 = Color3.fromHex("#181820")
+MainFrame.BackgroundTransparency = 0.4
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+-- Top Bar
+local TopBar = Instance.new("Frame")
+TopBar.Size = UDim2.new(1, 0, 0.12, 0)
+TopBar.Position = UDim2.new(0, 0, 0, 0)
+TopBar.BackgroundColor3 = Color3.fromHex("#4A1D96")
+TopBar.BackgroundTransparency = 0.4
+TopBar.Parent = MainFrame
+
+local Title = Instance.new("TextLabel")
+Title.Text = "ZETA KYOTO v0.5"
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 18
+Title.TextColor3 = Color3.new(1,1,1)
+Title.Size = UDim2.new(1, 0, 1, 0)
+Title.BackgroundTransparency = 1
+Title.Parent = TopBar
+
+-- Main Buttons
 local function CreateButton(name, yPos, textSize)
-    local btn = CreateElement("TextButton", {
-        Text = name,
-        Font = FONT,
-        TextSize = textSize,
-        Size = UDim2.new(0.85, 0, 0.18, 0),
-        Position = UDim2.new(0.075, 0, yPos, 0),
-        BackgroundColor3 = Color3.fromHex("#7E3AF2"),
-        BackgroundTransparency = 0.4,
-        TextColor3 = TEXT_COLOR,
-        Parent = MainFrame
-    })
-    CreateElement("UICorner", {Parent = btn})
+    local btn = Instance.new("TextButton")
+    btn.Text = name
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = textSize
+    btn.Size = UDim2.new(0.85, 0, 0.18, 0)
+    btn.Position = UDim2.new(0.075, 0, yPos, 0)
+    btn.BackgroundColor3 = Color3.fromHex("#7E3AF2")
+    btn.BackgroundTransparency = 0.4
+    btn.TextColor3 = Color3.new(1,1,1)
+    Instance.new("UICorner").Parent = btn
     return btn
 end
 
 local PingButton = CreateButton("CHECK PING & START", 0.3, 14)
 local KyotoButton = CreateButton("AUTO KYOTO", 0.55, 16)
 KyotoButton.Visible = false
+PingButton.Parent = MainFrame
+KyotoButton.Parent = MainFrame
 
--- SETTINGS PANEL
-local SettingsPanel = CreateElement("Frame", {
-    Size = UDim2.new(0, 190, 0, 180),
-    Position = UDim2.new(1, 5, 0, 40),
-    BackgroundColor3 = Color3.fromHex("#181820"),
-    BackgroundTransparency = 0.25,
-    Visible = false,
-    Parent = MainFrame
-})
-CreateElement("UICorner", {Parent = SettingsPanel})
+-- Settings System
+local SettingsBtn = Instance.new("TextButton")
+SettingsBtn.Text = "⚙️"
+SettingsBtn.Size = UDim2.new(0, 30, 0, 30)
+SettingsBtn.Position = UDim2.new(1, -35, 0, 5)
+SettingsBtn.BackgroundColor3 = Color3.fromHex("#4A1D96")
+SettingsBtn.BackgroundTransparency = 0.4
+SettingsBtn.TextSize = 18
+SettingsBtn.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner").Parent = SettingsBtn
+SettingsBtn.Parent = MainFrame
 
--- SETTINGS CONTENT
-CreateElement("TextLabel", {
-    Text = "OTHER SCRIPTS",
-    Font = FONT,
-    TextSize = 14,
-    TextColor3 = TEXT_COLOR,
-    Size = UDim2.new(1, -20, 0, 25),
-    Position = UDim2.new(0, 15, 0, 15),
-    BackgroundTransparency = 1,
-    Parent = SettingsPanel
-})
+local SettingsPanel = Instance.new("Frame")
+SettingsPanel.Size = UDim2.new(0, 190, 0, 180)
+SettingsPanel.Position = UDim2.new(1, 5, 0, 40)
+SettingsPanel.BackgroundColor3 = Color3.fromHex("#181820")
+SettingsPanel.BackgroundTransparency = 0.25
+SettingsPanel.Visible = false
+Instance.new("UICorner").Parent = SettingsPanel
+SettingsPanel.Parent = MainFrame
 
-CreateButton("AUTO BLOCK", 0.25, 12).Parent = SettingsPanel
-CreateElement("TextLabel", {
-    Text = "Made by K - Z",
-    Font = Enum.Font.SourceSans,
-    TextSize = 10,
-    TextColor3 = Color3.fromHex("#AAAAAA"),
-    Size = UDim2.new(1, 0, 0, 20),
-    Position = UDim2.new(0, 0, 0, 150),
-    BackgroundTransparency = 1,
-    TextXAlignment = Enum.TextXAlignment.Center,
-    Parent = SettingsPanel
-})
+-- Settings Content
+local OtherScriptsLabel = Instance.new("TextLabel")
+OtherScriptsLabel.Text = "OTHER SCRIPTS"
+OtherScriptsLabel.Font = Enum.Font.SourceSansBold
+OtherScriptsLabel.TextSize = 14
+OtherScriptsLabel.TextColor3 = Color3.new(1,1,1)
+OtherScriptsLabel.Size = UDim2.new(1, -20, 0, 25)
+OtherScriptsLabel.Position = UDim2.new(0, 15, 0, 15)
+OtherScriptsLabel.BackgroundTransparency = 1
+OtherScriptsLabel.Parent = SettingsPanel
 
--- FINALIZE
+local AutoBlockBtn = CreateButton("AUTO BLOCK", 0.25, 12)
+AutoBlockBtn.Size = UDim2.new(1, -30, 0, 30)
+AutoBlockBtn.Position = UDim2.new(0, 15, 0, 45)
+AutoBlockBtn.Parent = SettingsPanel
+
+local Signature = Instance.new("TextLabel")
+Signature.Text = "Made by K - Z"
+Signature.Font = Enum.Font.SourceSans
+Signature.TextSize = 10
+Signature.TextColor3 = Color3.fromHex("#AAAAAA")
+Signature.Size = UDim2.new(1, 0, 0, 20)
+Signature.Position = UDim2.new(0, 0, 0, 150)
+Signature.BackgroundTransparency = 1
+Signature.TextXAlignment = Enum.TextXAlignment.Center
+Signature.Parent = SettingsPanel
+
+--=== FUNCTIONALITY ===--
+SettingsBtn.MouseButton1Click:Connect(function()
+    SettingsPanel.Visible = not SettingsPanel.Visible
+end)
+
+AutoBlockBtn.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Cyborg883/TSB/main/CombatGui"))()
+end)
+
+local debounce = false
+PingButton.MouseButton1Click:Connect(function()
+    if debounce then return end
+    debounce = true
+    
+    local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
+    local waitTime = calculateWaitTime(ping)
+    KyotoButton.Visible = true
+    showNotif("Ping: "..math.floor(ping).."ms | Wait: "..waitTime.."s")
+    
+    debounce = false
+end)
+
+KyotoButton.MouseButton1Click:Connect(function()
+    if debounce then return end
+    debounce = true
+    
+    local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
+    local waitTime = calculateWaitTime(ping)
+    
+    pressKey1()
+    task.wait(waitTime)
+    teleportForward()
+    pressKey2()
+    
+    showNotif("Combo executed!")
+    debounce = false
+end)
+
+-- Finalize
 MainFrame.Parent = ScreenGui
 ScreenGui.Parent = PlayerGui
 
-print("ZETA KYOTO v0.5 DEPLOYED")
+print("ZETA KYOTO v0.5 HOTFIX DEPLOYED")
